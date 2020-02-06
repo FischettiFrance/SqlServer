@@ -4,5 +4,8 @@ block content
   h1 Unita SEGUENTI:
   ul
   each unita in units
-     li
-       a #{unita.Unit}
+   li
+       img(src=`/images/${unita.Unit}.png`)  
+       br
+       a(href=`/dettagli/${unita.Unit}`) #{unita.Unit}
+       
