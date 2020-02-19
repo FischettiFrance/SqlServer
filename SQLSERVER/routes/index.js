@@ -37,7 +37,7 @@ let executeQuery = function (res, query, next,page) {
 function renderPug(res,risultato,page)
 {
     console.log(risultato);
-    res.render(page, {units: risultato[0]});
+    res.render(page, {units: risultato});
     
 }
 
@@ -46,10 +46,20 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.get('/dettagli/:Unit', function(req, res, next) {
+/*router.get('/dettagli/:Unit', function(req, res, next) {
   console.log(req.params.Unit);
   let sqlQuery = ` select * from dbo.[cr-unit-attributes] where Unit = '${req.params.Unit}'`;
   executeQuery(res, sqlQuery, next,"dettagli")
+});*/
+router.get('/dettagli/:Unit', function(req, res, next) {
+  sql.connect(config, err => {
+    if(err) console.log(err);
+    let sqlRequest = new sql.Request();
+    sqlRequest.query(`SELECT * FROM [cr-unit-attributes] WHERE Unit = '${req.params.Unit}'`, (err, result) => {
+        if (err) console.log(err);
+        res.render('dettagli', { units: result.recordsets[0][0] });
+    });
+  });
 });
 
 router.get('/units', function (req, res, next) {
